@@ -10,14 +10,15 @@ async function run() {
 
     // run a query to create tables
     await client.query(`          
-      CREATE TABLE cats (
+      CREATE TABLE countries (
         id SERIAL PRIMARY KEY NOT NULL,
         name VARCHAR(512) NOT NULL,
-        type VARCHAR(512) NOT NULL,
+        language VARCHAR(512) NOT NULL,
+        president VARCHAR(512) NOT NULL,
+        capital VARCHAR(512) NOT NULL,
         url VARCHAR(1024) NOT NULL,
-        year INTEGER NOT NULL,
-        lives INTEGER NOT NULL,
-        is_sidekick BOOLEAN DEFAULT FALSE
+        population INTEGER NOT NULL,
+        has_mcdonald BOOLEAN DEFAULT FALSE
       );
     `);
 
