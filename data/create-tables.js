@@ -26,7 +26,8 @@ async function run() {
         capital VARCHAR(512) NOT NULL,
         url VARCHAR(1024) NOT NULL,
         population INTEGER NOT NULL,
-        has_mcdonald BOOLEAN DEFAULT FALSE
+        has_mcdonald BOOLEAN DEFAULT FALSE,
+        user_id INTEGER NOT NULL REFERENCES users(id)
       );
     `);
 
