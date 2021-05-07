@@ -248,8 +248,25 @@ describe('API Routes', () => {
         ...peru, userName: user.name
       });
     });
-   
-    
+
+    it('get list of countries from /api/users/:id/countries', async () => {
+
+      const response = await request.get(`/api/users/${user.id}/countries`);
+      expect(response.status).toBe(200);
+
+      const expected = [colombia, ecaudor, peru].map((country) => {
+        return {
+          userName: user.name,
+          userId: user.id,
+          ...country
+        };
+      });
+      
+      expect(response.body).toEqual(expect.arrayContaining(expected));
+      
+
+
+    });
 
     it('Delete colombia from /api/countries/:id', async () => {
       const deleteResponse = await request
@@ -264,6 +281,8 @@ describe('API Routes', () => {
       expect(response.status).toBe(200);
       expect(response.body.find(country => country.id === colombia.id)).toBeUndefined();
     });
+
+    
   
   });
 
