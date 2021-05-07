@@ -197,7 +197,7 @@ describe('API Routes', () => {
     });
 
     it('Get list of countries from /api/countries/', async () => {
-      ecaudor.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definative id from db
+      ecaudor.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definitive  id from db
       peru.userId = user.id;
       const response1 = await request
         .post('/api/countries')
