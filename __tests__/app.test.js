@@ -196,7 +196,9 @@ describe('API Routes', () => {
 
     });
 
-    it.skip('Get list of countries from /api/countries/', async () => {
+    it('Get list of countries from /api/countries/', async () => {
+      ecaudor.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definative id from db
+      peru.userId = user.id;
       const response1 = await request
         .post('/api/countries')
         .send(ecaudor);
@@ -209,31 +211,47 @@ describe('API Routes', () => {
 
       const response = await request
         .get('/api/countries');
+     
 
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.arrayContaining([colombia, ecaudor, peru]));
-
+      const expected = [colombia, ecaudor, peru].map((country) => {
+        return {
+          userName: user.name,
+          ...country
+        };
+      });
+      
+      expect(response.body).toEqual(expect.arrayContaining(expected));
       
 
     });
 
 
-    it.skip('GET /api/countries/:id colombia', async () => {
+    it('GET /api/countries/:id colombia', async () => {
       const response = await request.get(`/api/countries/${colombia.id}`);
+
+
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(colombia);
+      
+
+      expect(response.body).toEqual({ 
+        ...colombia, userName: user.name
+      });
     });
 
     
-    it.skip('GET peru from /api/countries/:population ', async () => {
+    it('GET peru from /api/countries/:population ', async () => {
       const response = await request.get(`/api/countries/pop/${peru.population}`);
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(peru);
+      expect(response.body).toEqual({ 
+        ...peru, userName: user.name
+      });
     });
+   
     
 
-    it.skip('Delete colombia from /api/countries/:id', async () => {
+    it('Delete colombia from /api/countries/:id', async () => {
       const deleteResponse = await request
         .delete(`/api/countries/${colombia.id}`);
      
@@ -244,7 +262,7 @@ describe('API Routes', () => {
 
       const response = await request.get('/api/countries');
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.arrayContaining([ecaudor, peru]));
+      expect(response.body.find(country => country.id === colombia.id)).toBeUndefined();
     });
   
   });
