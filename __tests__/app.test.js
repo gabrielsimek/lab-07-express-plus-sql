@@ -286,6 +286,38 @@ describe('API Routes', () => {
   
   });
 
+  describe('seed data tests', () => {
+    beforeAll(() => {
+      execSync('npm run setup-db');
+    });
+
+    
+    it('GET /api/countries', async () => {
+      const response = await request.get('/api/countries');
+
+      expect(response.status).toBe(200);
+
+      expect(response.body.length).toBeGreaterThan(0);
+
+      expect(response.body[0]).toEqual({
+        id: expect.any(Number),
+        name: expect.any(String),
+        president: expect.any(String),
+        language: expect.any(String),
+        capital: expect.any(String),
+        url: expect.any(String),
+        population: expect.any(Number),
+        hasMcdonald: expect.any(Boolean),
+        userId: expect.any(Number),
+        userName: expect.any(String)
+
+      });
+
+
+    });
+
+  });
+
 
 });
 
