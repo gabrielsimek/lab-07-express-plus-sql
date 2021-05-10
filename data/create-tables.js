@@ -9,7 +9,15 @@ async function run() {
   try {
 
     // run a query to create tables
-    await client.query(`          
+    await client.query(`
+    
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY NOT NULL,
+        name VARCHAR(512) NOT NULL,
+        email VARCHAR(512) NOT NULL,
+        password_hash VARCHAR(512) NOT NULL
+      );
+      
       CREATE TABLE countries (
         id SERIAL PRIMARY KEY NOT NULL,
         name VARCHAR(512) NOT NULL,
@@ -18,7 +26,8 @@ async function run() {
         capital VARCHAR(512) NOT NULL,
         url VARCHAR(1024) NOT NULL,
         population INTEGER NOT NULL,
-        has_mcdonald BOOLEAN DEFAULT FALSE
+        has_mcdonald BOOLEAN DEFAULT FALSE,
+        user_id INTEGER NOT NULL REFERENCES users(id)
       );
     `);
 

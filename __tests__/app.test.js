@@ -113,9 +113,24 @@ describe('API Routes', () => {
 
 
   describe('/api/countries', () => {
-
-    beforeAll(() => {
+    let user;
+    beforeAll(async () => {
       execSync('npm run recreate-tables');
+
+      const response = await request
+        .post('/api/auth/signup')
+        .send({
+          name: 'Me the User',
+          email: 'me@user.com',
+          password: 'password'
+        });
+
+      expect(response.status).toBe(200);
+
+      user = response.body;
+
+
+
     });
 
     let colombia = {
@@ -155,6 +170,7 @@ describe('API Routes', () => {
     };
 
     it('Post Colombia to /api/countries', async () => {
+      colombia.userId = user.id;
       const response = await request
         .post('/api/countries')
         .send(colombia);
@@ -181,6 +197,8 @@ describe('API Routes', () => {
     });
 
     it('Get list of countries from /api/countries/', async () => {
+      ecaudor.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definitive  id from db
+      peru.userId = user.id;
       const response1 = await request
         .post('/api/countries')
         .send(ecaudor);
@@ -193,11 +211,18 @@ describe('API Routes', () => {
 
       const response = await request
         .get('/api/countries');
+     
 
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.arrayContaining([colombia, ecaudor, peru]));
-
+      const expected = [colombia, ecaudor, peru].map((country) => {
+        return {
+          userName: user.name,
+          ...country
+        };
+      });
+      
+      expect(response.body).toEqual(expect.arrayContaining(expected));
       
 
     });
@@ -205,18 +230,43 @@ describe('API Routes', () => {
 
     it('GET /api/countries/:id colombia', async () => {
       const response = await request.get(`/api/countries/${colombia.id}`);
+
+
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(colombia);
+      
+
+      expect(response.body).toEqual({ 
+        ...colombia, userName: user.name
+      });
     });
 
     
     it('GET peru from /api/countries/:population ', async () => {
-      console.log(peru.population);
       const response = await request.get(`/api/countries/pop/${peru.population}`);
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(peru);
+      expect(response.body).toEqual({ 
+        ...peru, userName: user.name
+      });
     });
-    
+
+    it('get list of countries from /api/users/:id/countries', async () => {
+
+      const response = await request.get(`/api/users/${user.id}/countries`);
+      expect(response.status).toBe(200);
+
+      const expected = [colombia, ecaudor, peru].map((country) => {
+        return {
+          userName: user.name,
+          userId: user.id,
+          ...country
+        };
+      });
+      
+      expect(response.body).toEqual(expect.arrayContaining(expected));
+      
+
+
+    });
 
     it('Delete colombia from /api/countries/:id', async () => {
       const deleteResponse = await request
@@ -229,9 +279,43 @@ describe('API Routes', () => {
 
       const response = await request.get('/api/countries');
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.arrayContaining([ecaudor, peru]));
+      expect(response.body.find(country => country.id === colombia.id)).toBeUndefined();
     });
+
+    
   
+  });
+
+  describe('seed data tests', () => {
+    beforeAll(() => {
+      execSync('npm run setup-db');
+    });
+
+    
+    it('GET /api/countries', async () => {
+      const response = await request.get('/api/countries');
+
+      expect(response.status).toBe(200);
+
+      expect(response.body.length).toBeGreaterThan(0);
+
+      expect(response.body[0]).toEqual({
+        id: expect.any(Number),
+        name: expect.any(String),
+        president: expect.any(String),
+        language: expect.any(String),
+        capital: expect.any(String),
+        url: expect.any(String),
+        population: expect.any(Number),
+        hasMcdonald: expect.any(Boolean),
+        userId: expect.any(Number),
+        userName: expect.any(String)
+
+      });
+
+
+    });
+
   });
 
 
