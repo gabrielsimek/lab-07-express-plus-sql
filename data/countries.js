@@ -7,7 +7,7 @@ const countries = [
     capital: 'Bogota',
     url: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg',
     population: 17684536,
-    hasMcdonald: true
+    hasBeach: true
 
   },
   {
@@ -17,7 +17,7 @@ const countries = [
     capital: 'Quito',
     url: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg',
     population: 50372424,
-    hasMcdonald: true
+    hasBeach: true
 
   },
   {
@@ -27,7 +27,7 @@ const countries = [
     capital: 'lima',
     url: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
     population: 32824358,
-    hasMcdonald: true
+    hasBeach: true
 
   },
   {
@@ -37,7 +37,7 @@ const countries = [
     capital: 'La Paz',
     url: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/Bandera_de_Bolivia_%28Estado%29.svg',
     population: 1142245,
-    hasMcdonald: false
+    hasBeach: false
 
   },
   {
@@ -47,7 +47,7 @@ const countries = [
     capital: 'Santiago',
     url: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Flag_of_Chile.svg',
     population: 17574003,
-    hasMcdonald: true
+    hasBeach: true
 
   },
   {
@@ -57,7 +57,7 @@ const countries = [
     capital: 'Brasilia',
     url: 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg',
     population: 210147125,
-    hasMcdonald: true
+    hasBeach: true
 
   },
 
