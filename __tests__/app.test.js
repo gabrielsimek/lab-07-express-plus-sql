@@ -145,14 +145,14 @@ describe('API Routes', () => {
   
     };
 
-    let ecaudor = {
+    let  brasil = {
       id: expect.any(Number),
-      name: 'Ecuador',
-      president: 'Lenín Moreno',
-      language: 'Spanish',
-      capital: 'Quito',
-      url: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg',
-      population: 50372424,
+      name: 'Brasil',
+      president: 'Jair Bolsonaro',
+      language: 'Portuguese',
+      capital: 'Brasilia',
+      url: 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg',
+      population: 210147125,
       hasBeach: true
   
     };
@@ -174,7 +174,7 @@ describe('API Routes', () => {
       const response = await request
         .post('/api/countries')
         .send(colombia);
-
+      
       expect(response.status).toBe(200);
       expect(response.body).toEqual(colombia);
 
@@ -195,18 +195,18 @@ describe('API Routes', () => {
         
 
     });
-
+    
     it('Get list of countries from /api/countries/', async () => {
-      ecaudor.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definitive  id from db
+      brasil.userId = user.id; //user id from our user which we posted up initially. then post updated objects so that they get a definitive  id from db
       peru.userId = user.id;
       const response1 = await request
         .post('/api/countries')
-        .send(ecaudor);
+        .send(brasil);
       const response2 = await request
         .post('/api/countries')
         .send(peru);
 
-      ecaudor = response1.body;
+      brasil = response1.body;
       peru = response2.body;
 
       const response = await request
@@ -215,7 +215,7 @@ describe('API Routes', () => {
 
 
       expect(response.status).toBe(200);
-      const expected = [colombia, ecaudor, peru].map((country) => {
+      const expected = [colombia, brasil, peru].map((country) => {
         return {
           userName: user.name,
           ...country
@@ -254,7 +254,7 @@ describe('API Routes', () => {
       const response = await request.get(`/api/users/${user.id}/countries`);
       expect(response.status).toBe(200);
 
-      const expected = [colombia, ecaudor, peru].map((country) => {
+      const expected = [colombia, brasil, peru].map((country) => {
         return {
           userName: user.name,
           userId: user.id,
@@ -317,6 +317,65 @@ describe('API Routes', () => {
     });
 
   });
+  describe('distinct lang test', () => {
+    beforeAll(() => {
+      execSync('npm run setup-db');
+    });
+    it('GET /api/countries/languages', async () => {
+      let colombia = {
+        id: expect.any(Number),
+        name: 'Colombia',
+        president: 'Iván Duque Márquez',
+        language: 'Spanish',
+        capital: 'Bogota',
+        url: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg',
+        population: 17684536,
+        hasBeach: true
+    
+      };
+  
+      let  brasil = {
+        id: expect.any(Number),
+        name: 'Brasil',
+        president: 'Jair Bolsonaro',
+        language: 'Portuguese',
+        capital: 'Brasilia',
+        url: 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg',
+        population: 210147125,
+        hasBeach: true
+    
+      };
+      
+      let peru = {
+        id: expect.any(Number),
+        name: 'Peru',
+        president: 'Lenín Moreno',
+        language: 'Spanish',
+        capital: 'lima',
+        url: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
+        population: 32824358,
+        hasBeach: true
+    
+      };
+      // act - make the request
+      const response = await request.get('/api/countries/languages');
+
+      // was response OK (200)?
+      expect(response.status).toBe(200);
+
+      // did it return the data we expected?
+      const expected = [...new Set([colombia, brasil, peru].map((country) => {
+        return country.language;
+
+      }))].map((item) => {
+        return { language: item };
+      });
+      
+      expect(response.body).toEqual(expect.arrayContaining(expected));
+
+    });
+  });
+  
 
 
 });
