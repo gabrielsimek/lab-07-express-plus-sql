@@ -28,10 +28,10 @@ async function run() {
     await Promise.all(
       countries.map(country => {
         return client.query(`
-          INSERT INTO countries (name, language, president, capital, url, population, has_mcdonald, user_id)
+          INSERT INTO countries (name, language, president, capital, url, population, has_beach, user_id)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
         `,
-        [country.name, country.language, country.president,  country.capital, country.url, country.population, country.hasMcdonald, user.id]);
+        [country.name, country.language, country.president,  country.capital, country.url, country.population, country.hasBeach, user.id]);
       })
     );
     
